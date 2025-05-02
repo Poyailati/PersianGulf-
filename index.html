@@ -1,187 +1,90 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-  <meta charset="UTF-8">
-  <title>فروشگاه لپ‌تاپ‌های کارکرده</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      direction: rtl;
-      background: #f4f4f4;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background: #333;
-      color: #fff;
-      padding: 15px;
-      text-align: center;
-    }
-    .container {
-      width: 90%;
-      margin: 20px auto;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-around;
-    }
-    .product {
-      background: #fff;
-      box-shadow: 0 0 10px #ccc;
-      width: 30%;
-      margin: 15px;
-      padding: 15px;
-      text-align: center;
-    }
-    .product img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-    }
-    .price {
-      color: #e67e22;
-      font-size: 18px;
-      margin: 10px 0;
-    }
-    .btn {
-      padding: 8px 15px;
-      margin: 5px;
-      background: #27ae60;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    .btn-detail {
-      background: #2980b9;
-    }
-    .modal {
-      display: none;
-      position: fixed;
-      top: 10%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 60%;
-      background: #fff;
-      padding: 20px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
-      z-index: 1000;
-    }
-    .modal.active {
-      display: block;
-    }
-    .overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 999;
-    }
-    .overlay.active {
-      display: block;
-    }
-    .compare-box {
-      background: #fff;
-      padding: 10px;
-      margin: 20px;
-      box-shadow: 0 0 10px #ccc;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مقایسه لپ‌تاپ‌ها</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 15px;
+            text-align: center;
+        }
+        th {
+            background-color: #333;
+            color: #fff;
+        }
+        td {
+            background-color: #fff;
+        }
+    </style>
 </head>
 <body>
 
 <header>
-  <h1>فروشگاه لپ‌تاپ‌های کارکرده</h1>
+    <h1>مقایسه لپ‌تاپ‌ها</h1>
 </header>
 
-<div class="container" id="productContainer"></div>
-
-<div class="compare-box">
-  <h3>مقایسه محصولات انتخاب‌شده:</h3>
-  <ul id="compareList"></ul>
-</div>
-
-<div class="overlay" id="overlay"></div>
-
-<div class="modal" id="productModal">
-  <h2 id="modalTitle"></h2>
-  <img id="modalImage" style="width: 100%; max-height: 300px; object-fit: cover;">
-  <p id="modalDesc"></p>
-  <p id="modalPrice" style="color: #e67e22;"></p>
-  <button class="btn" onclick="addToCompare()">افزودن به مقایسه</button>
-  <button class="btn" onclick="closeModal()">بستن</button>
+<div class="container">
+    <table>
+        <thead>
+            <tr>
+                <th>نام</th>
+                <th>قیمت</th>
+                <th>پردازنده</th>
+                <th>رم</th>
+                <th>گرافیک</th>
+            </tr>
+        </thead>
+        <tbody id="compareTableBody">
+            <tr><td colspan="5">در حال حاضر هیچ لپ‌تاپی برای مقایسه انتخاب نشده است.</td></tr>
+        </tbody>
+    </table>
 </div>
 
 <script>
-const products = [
-  {
-    name: 'لپ‌تاپ دل مدل XPS',
-    price: 2500000,
-    image: 'https://via.placeholder.com/300x200?text=Dell+XPS',
-    desc: 'پردازنده i7، رم 16GB، هارد 512GB SSD، گرافیک Intel Iris'
-  },
-  {
-    name: 'لپ‌تاپ اچ‌پی مدل Pavilion',
-    price: 3000000,
-    image: 'https://via.placeholder.com/300x200?text=HP+Pavilion',
-    desc: 'پردازنده i5، رم 8GB، هارد 1TB HDD، گرافیک NVIDIA 2GB'
-  },
-  {
-    name: 'لپ‌تاپ اپل مدل MacBook Pro',
-    price: 8000000,
-    image: 'https://via.placeholder.com/300x200?text=MacBook+Pro',
-    desc: 'پردازنده M1، رم 16GB، هارد 512GB SSD، گرافیک Apple GPU'
-  }
-];
-
-let selectedForCompare = [];
-
-const container = document.getElementById('productContainer');
-const modal = document.getElementById('productModal');
-const overlay = document.getElementById('overlay');
-const compareList = document.getElementById('compareList');
-
-function showProducts() {
-  products.forEach((p, i) => {
-    const div = document.createElement('div');
-    div.className = 'product';
-    div.innerHTML = `
-      <img src="${p.image}" alt="${p.name}">
-      <h3>${p.name}</h3>
-      <p class="price">${p.price.toLocaleString()} تومان</p>
-      <button class="btn btn-detail" onclick="showDetails(${i})">مشاهده جزئیات</button>
-    `;
-    container.appendChild(div);
-  });
-}
-
-function showDetails(index) {
-  const p = products[index];
-  document.getElementById('modalTitle').innerText = p.name;
-  document.getElementById('modalImage').src = p.image;
-  document.getElementById('modalDesc').innerText = p.desc;
-  document.getElementById('modalPrice').innerText = p.price.toLocaleString() + ' تومان';
-  modal.dataset.index = index;
-  modal.classList.add('active');
-  overlay.classList.add('active');
-}
-
-function closeModal() {
-  modal.classList.remove('active');
-  overlay.classList.remove('active');
-}
-
-function addToCompare() {
-  const index = modal.dataset.index;
-  const p = products[index];
-  if (!selectedForCompare.includes(p.name)) {
-    selectedForCompare.push(p.name);
-    const li = document.createElement('li');
-    li.innerText = `${p.name} - ${p.desc} - ${p.price.toLocaleString()} تومان`;
-    compareList.appendChild(li);
-  }
-  closeModal();
-}
-
-showProducts();
+    window.onload = function() {
+        let compareData = JSON.parse(localStorage.getItem('compareData')) || [];
+        const tableBody = document.getElementById('compareTableBody');
+        
+        if (compareData.length > 0) {
+            tableBody.innerHTML = '';
+            compareData.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>${item.price} تومان</td>
+                    <td>${item.cpu}</td>
+                    <td>${item.ram}</td>
+                    <td>${item.graphics}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+    };
 </script>
 
 </body>
