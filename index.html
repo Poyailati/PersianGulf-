@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحه ساده با JavaScript</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 30px;
+            font-size: 20px;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>سلام! خوش آمدید به صفحه JavaScript</h1>
+    <p>برای نمایش پیامی که به زبان JavaScript نوشته شده است، دکمه زیر را فشار دهید.</p>
+    
+    <button onclick="showMessage()">نمایش پیام</button>
+
+    <div id="result"></div>
+
+    <script>
+        function showMessage() {
+            document.getElementById("result").innerHTML = "این پیام توسط JavaScript تولید شده است!";
+        }
+    </script>
+
+</body>
+</html>
