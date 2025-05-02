@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>فروشگاه لپ‌تاپ‌های کارکرده</title>
+    <title>فروشگاه لپ‌تاپ‌ها</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -51,6 +51,25 @@
             cursor: pointer;
             font-size: 16px;
         }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 15px;
+            text-align: center;
+        }
+        th {
+            background-color: #333;
+            color: #fff;
+        }
+        td {
+            background-color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -60,6 +79,7 @@
 </header>
 
 <div class="container">
+    <!-- بخش لپ‌تاپ‌ها -->
     <div class="product">
         <img src="https://via.placeholder.com/300x200" alt="لپ‌تاپ 1">
         <h3>لپ‌تاپ دل مدل XPS</h3>
@@ -80,14 +100,114 @@
         <p class="price">8,000,000 تومان</p>
         <button onclick="addToCompare('اپل مدل MacBook Pro', 8000000, 'M1', '16GB', 'Apple M1')">مقایسه</button>
     </div>
+
+    <br><br>
+    <!-- دکمه برای مشاهده صفحه مقایسه -->
+    <button onclick="window.location.href='product.html'">مشاهده مقایسه</button>
 </div>
 
 <script>
+    // ذخیره اطلاعات لپ‌تاپ‌ها برای مقایسه در localStorage
     function addToCompare(name, price, cpu, ram, graphics) {
         let compareData = JSON.parse(localStorage.getItem('compareData')) || [];
         compareData.push({ name, price, cpu, ram, graphics });
         localStorage.setItem('compareData', JSON.stringify(compareData));
     }
+</script>
+
+</body>
+</html>
+
+<!-- product.html (صفحه مقایسه) -->
+
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مقایسه لپ‌تاپ‌ها</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 15px;
+            text-align: center;
+        }
+        th {
+            background-color: #333;
+            color: #fff;
+        }
+        td {
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>مقایسه لپ‌تاپ‌ها</h1>
+</header>
+
+<div class="container">
+    <table>
+        <thead>
+            <tr>
+                <th>نام</th>
+                <th>قیمت</th>
+                <th>پردازنده</th>
+                <th>رم</th>
+                <th>گرافیک</th>
+            </tr>
+        </thead>
+        <tbody id="compareTableBody">
+            <tr><td colspan="5">در حال حاضر هیچ لپ‌تاپی برای مقایسه انتخاب نشده است.</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // بارگذاری اطلاعات مقایسه شده از localStorage
+    window.onload = function() {
+        let compareData = JSON.parse(localStorage.getItem('compareData')) || [];
+        const tableBody = document.getElementById('compareTableBody');
+        
+        if (compareData.length > 0) {
+            tableBody.innerHTML = '';
+            compareData.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>${item.price} تومان</td>
+                    <td>${item.cpu}</td>
+                    <td>${item.ram}</td>
+                    <td>${item.graphics}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+    };
 </script>
 
 </body>
