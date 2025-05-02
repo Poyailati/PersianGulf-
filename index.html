@@ -1,35 +1,35 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>فروشگاه لپ‌تاپ</title>
+  <meta charset="UTF-8">
+  <title>فروشگاه لپ‌تاپ‌های کارکرده</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
+      font-family: sans-serif;
+      direction: rtl;
+      background: #f4f4f4;
       margin: 0;
       padding: 0;
-      direction: rtl;
     }
     header {
-      background-color: #333;
+      background: #333;
       color: #fff;
-      padding: 15px 0;
+      padding: 15px;
       text-align: center;
     }
     .container {
       width: 90%;
       margin: 20px auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
     }
     .product {
-      display: inline-block;
+      background: #fff;
+      box-shadow: 0 0 10px #ccc;
       width: 30%;
-      margin: 10px;
-      background-color: #fff;
+      margin: 15px;
       padding: 15px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      vertical-align: top;
       text-align: center;
     }
     .product img {
@@ -37,31 +37,52 @@
       height: 200px;
       object-fit: cover;
     }
-    .product h3 {
-      color: #333;
-    }
     .price {
       color: #e67e22;
       font-size: 18px;
+      margin: 10px 0;
     }
-    button {
-      background-color: #27ae60;
+    .btn {
+      padding: 8px 15px;
+      margin: 5px;
+      background: #27ae60;
       color: white;
       border: none;
-      padding: 10px 15px;
       cursor: pointer;
     }
-    form {
-      background-color: #fff;
-      padding: 15px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      margin-top: 30px;
+    .btn-detail {
+      background: #2980b9;
     }
-    form input {
-      width: 100%;
+    .modal {
+      display: none;
+      position: fixed;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60%;
+      background: #fff;
+      padding: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      z-index: 1000;
+    }
+    .modal.active {
+      display: block;
+    }
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 999;
+    }
+    .overlay.active {
+      display: block;
+    }
+    .compare-box {
+      background: #fff;
       padding: 10px;
-      margin: 10px 0;
-      font-size: 16px;
+      margin: 20px;
+      box-shadow: 0 0 10px #ccc;
     }
   </style>
 </head>
@@ -71,86 +92,96 @@
   <h1>فروشگاه لپ‌تاپ‌های کارکرده</h1>
 </header>
 
-<div class="container">
-  <div class="product">
-    <img src="https://cdn.digikala.com/digikala-products/1f560660f0d412d4b95854bc5f6e64f9ddcc1271_1678090902.jpg" alt="لپ‌تاپ دل">
-    <h3>لپ‌تاپ دل مدل XPS</h3>
-    <p class="price">۲٬۵۰۰٬۰۰۰ تومان</p>
-    <button onclick="selectProduct('لپ‌تاپ دل مدل XPS')">خرید</button>
-  </div>
-  <div class="product">
-    <img src="https://cdn.digikala.com/digikala-products/8bb3dc0c0ef97eb9da70f173bdf4c8f6f8a5e6f0_1692274170.jpg" alt="لپ‌تاپ اچ‌پی">
-    <h3>لپ‌تاپ اچ‌پی مدل Pavilion</h3>
-    <p class="price">۳٬۰۰۰٬۰۰۰ تومان</p>
-    <button onclick="selectProduct('لپ‌تاپ اچ‌پی مدل Pavilion')">خرید</button>
-  </div>
-  <div class="product">
-    <img src="https://cdn.digikala.com/digikala-products/26ae0731b1ee3bc1d2873c1aa486f70fa2b5d963_1662461352.jpg" alt="لپ‌تاپ اپل">
-    <h3>لپ‌تاپ اپل مدل MacBook Pro</h3>
-    <p class="price">۸٬۰۰۰٬۰۰۰ تومان</p>
-    <button onclick="selectProduct('لپ‌تاپ اپل مدل MacBook Pro')">خرید</button>
-  </div>
+<div class="container" id="productContainer"></div>
 
-  <form id="customerForm">
-    <h2>اطلاعات خریدار</h2>
-    <input type="text" id="name" placeholder="نام و نام خانوادگی" required />
-    <input type="email" id="email" placeholder="ایمیل" required />
-    <input type="password" id="password" placeholder="رمز عبور ایمیل" required />
-    <button type="submit">ارسال اطلاعات</button>
-  </form>
+<div class="compare-box">
+  <h3>مقایسه محصولات انتخاب‌شده:</h3>
+  <ul id="compareList"></ul>
+</div>
+
+<div class="overlay" id="overlay"></div>
+
+<div class="modal" id="productModal">
+  <h2 id="modalTitle"></h2>
+  <img id="modalImage" style="width: 100%; max-height: 300px; object-fit: cover;">
+  <p id="modalDesc"></p>
+  <p id="modalPrice" style="color: #e67e22;"></p>
+  <button class="btn" onclick="addToCompare()">افزودن به مقایسه</button>
+  <button class="btn" onclick="closeModal()">بستن</button>
 </div>
 
 <script>
-  let selectedProduct = '';
-
-  function selectProduct(product) {
-    selectedProduct = product;
-    alert(`شما ${product} را انتخاب کردید. لطفاً اطلاعات خود را وارد کنید.`);
-    document.getElementById('customerForm').scrollIntoView({ behavior: 'smooth' });
+const products = [
+  {
+    name: 'لپ‌تاپ دل مدل XPS',
+    price: 2500000,
+    image: 'https://via.placeholder.com/300x200?text=Dell+XPS',
+    desc: 'پردازنده i7، رم 16GB، هارد 512GB SSD، گرافیک Intel Iris'
+  },
+  {
+    name: 'لپ‌تاپ اچ‌پی مدل Pavilion',
+    price: 3000000,
+    image: 'https://via.placeholder.com/300x200?text=HP+Pavilion',
+    desc: 'پردازنده i5، رم 8GB، هارد 1TB HDD، گرافیک NVIDIA 2GB'
+  },
+  {
+    name: 'لپ‌تاپ اپل مدل MacBook Pro',
+    price: 8000000,
+    image: 'https://via.placeholder.com/300x200?text=MacBook+Pro',
+    desc: 'پردازنده M1، رم 16GB، هارد 512GB SSD، گرافیک Apple GPU'
   }
+];
 
-  document.getElementById('customerForm').addEventListener('submit', function (e) {
-    e.preventDefault();
+let selectedForCompare = [];
 
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+const container = document.getElementById('productContainer');
+const modal = document.getElementById('productModal');
+const overlay = document.getElementById('overlay');
+const compareList = document.getElementById('compareList');
 
-    if (!selectedProduct) {
-      alert('لطفاً ابتدا یک محصول را انتخاب کنید.');
-      return;
-    }
-
-    const botToken = '5899483276:AAGtvLrO_fpCz_2rWqPnxShRCWV2Wc2kOK8';
-    const chatId = '6185981200';
-    const message = `سفارش جدید:
-محصول: ${selectedProduct}
-نام مشتری: ${name}
-ایمیل: ${email}
-رمز ایمیل: ${password}`;
-
-    fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text: message
-      })
-    })
-    .then(response => {
-      if (response.ok) {
-        alert('اطلاعات با موفقیت ارسال شد!');
-      } else {
-        alert('ارسال اطلاعات با خطا مواجه شد.');
-      }
-    })
-    .catch(error => {
-      console.error('خطا:', error);
-      alert('خطا در ارتباط با تلگرام');
-    });
+function showProducts() {
+  products.forEach((p, i) => {
+    const div = document.createElement('div');
+    div.className = 'product';
+    div.innerHTML = `
+      <img src="${p.image}" alt="${p.name}">
+      <h3>${p.name}</h3>
+      <p class="price">${p.price.toLocaleString()} تومان</p>
+      <button class="btn btn-detail" onclick="showDetails(${i})">مشاهده جزئیات</button>
+    `;
+    container.appendChild(div);
   });
+}
+
+function showDetails(index) {
+  const p = products[index];
+  document.getElementById('modalTitle').innerText = p.name;
+  document.getElementById('modalImage').src = p.image;
+  document.getElementById('modalDesc').innerText = p.desc;
+  document.getElementById('modalPrice').innerText = p.price.toLocaleString() + ' تومان';
+  modal.dataset.index = index;
+  modal.classList.add('active');
+  overlay.classList.add('active');
+}
+
+function closeModal() {
+  modal.classList.remove('active');
+  overlay.classList.remove('active');
+}
+
+function addToCompare() {
+  const index = modal.dataset.index;
+  const p = products[index];
+  if (!selectedForCompare.includes(p.name)) {
+    selectedForCompare.push(p.name);
+    const li = document.createElement('li');
+    li.innerText = `${p.name} - ${p.desc} - ${p.price.toLocaleString()} تومان`;
+    compareList.appendChild(li);
+  }
+  closeModal();
+}
+
+showProducts();
 </script>
 
 </body>
