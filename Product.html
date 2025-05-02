@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مقایسه لپ‌تاپ‌ها</title>
+    <title>فروشگاه لپ‌تاپ‌های کارکرده</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -21,70 +21,73 @@
             width: 80%;
             margin: 20px auto;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-        th, td {
-            padding: 15px;
+        .product {
+            display: inline-block;
+            width: 30%;
+            margin: 15px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
-        th {
-            background-color: #333;
-            color: #fff;
+        .product img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
         }
-        td {
-            background-color: #fff;
+        .product h3 {
+            color: #333;
+        }
+        .product .price {
+            color: #f39c12;
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        .product button {
+            background-color: #27ae60;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>مقایسه لپ‌تاپ‌ها</h1>
+    <h1>فروشگاه لپ‌تاپ‌های کارکرده</h1>
 </header>
 
 <div class="container">
-    <table>
-        <thead>
-            <tr>
-                <th>نام</th>
-                <th>قیمت</th>
-                <th>پردازنده</th>
-                <th>رم</th>
-                <th>گرافیک</th>
-            </tr>
-        </thead>
-        <tbody id="compareTableBody">
-            <tr><td colspan="5">در حال حاضر هیچ لپ‌تاپی برای مقایسه انتخاب نشده است.</td></tr>
-        </tbody>
-    </table>
+    <div class="product">
+        <img src="https://via.placeholder.com/300x200" alt="لپ‌تاپ 1">
+        <h3>لپ‌تاپ دل مدل XPS</h3>
+        <p class="price">2,500,000 تومان</p>
+        <button onclick="addToCompare('دل مدل XPS', 2500000, 'Core i7', '16GB', 'NVIDIA GTX 1050')">مقایسه</button>
+    </div>
+
+    <div class="product">
+        <img src="https://via.placeholder.com/300x200" alt="لپ‌تاپ 2">
+        <h3>لپ‌تاپ اچ‌پی مدل Pavilion</h3>
+        <p class="price">3,000,000 تومان</p>
+        <button onclick="addToCompare('اچ‌پی مدل Pavilion', 3000000, 'Core i5', '8GB', 'Intel UHD 620')">مقایسه</button>
+    </div>
+
+    <div class="product">
+        <img src="https://via.placeholder.com/300x200" alt="لپ‌تاپ 3">
+        <h3>لپ‌تاپ اپل مدل MacBook Pro</h3>
+        <p class="price">8,000,000 تومان</p>
+        <button onclick="addToCompare('اپل مدل MacBook Pro', 8000000, 'M1', '16GB', 'Apple M1')">مقایسه</button>
+    </div>
 </div>
 
 <script>
-    window.onload = function() {
+    function addToCompare(name, price, cpu, ram, graphics) {
         let compareData = JSON.parse(localStorage.getItem('compareData')) || [];
-        const tableBody = document.getElementById('compareTableBody');
-        
-        if (compareData.length > 0) {
-            tableBody.innerHTML = '';
-            compareData.forEach(item => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${item.name}</td>
-                    <td>${item.price} تومان</td>
-                    <td>${item.cpu}</td>
-                    <td>${item.ram}</td>
-                    <td>${item.graphics}</td>
-                `;
-                tableBody.appendChild(row);
-            });
-        }
-    };
+        compareData.push({ name, price, cpu, ram, graphics });
+        localStorage.setItem('compareData', JSON.stringify(compareData));
+    }
 </script>
 
 </body>
