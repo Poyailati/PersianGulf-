@@ -1,0 +1,32 @@
+// MainActivity.kt
+
+import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+
+class MainActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        val usernameEditText: EditText = findViewById(R.id.usernameEditText)
+        val passwordEditText: EditText = findViewById(R.id.passwordEditText)
+        val registerButton: Button = findViewById(R.id.registerButton)
+
+        registerButton.setOnClickListener {
+            val username = usernameEditText.text.toString()
+            val password = passwordEditText.text.toString()
+
+            if (username.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Please enter both username and password", Toast.LENGTH_SHORT).show()
+            } else {
+                // Send user data to server for registration
+                // You can use Retrofit, Volley, etc. to communicate with the server
+                Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+}
