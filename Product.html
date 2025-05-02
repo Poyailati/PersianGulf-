@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مقایسه لپ‌تاپ‌ها</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 15px;
+            text-align: center;
+        }
+        th {
+            background-color: #333;
+            color: #fff;
+        }
+        td {
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>مقایسه لپ‌تاپ‌ها</h1>
+</header>
+
+<div class="container">
+    <table>
+        <thead>
+            <tr>
+                <th>نام</th>
+                <th>قیمت</th>
+                <th>پردازنده</th>
+                <th>رم</th>
+                <th>گرافیک</th>
+            </tr>
+        </thead>
+        <tbody id="compareTableBody">
+            <tr><td colspan="5">در حال حاضر هیچ لپ‌تاپی برای مقایسه انتخاب نشده است.</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    window.onload = function() {
+        let compareData = JSON.parse(localStorage.getItem('compareData')) || [];
+        const tableBody = document.getElementById('compareTableBody');
+        
+        if (compareData.length > 0) {
+            tableBody.innerHTML = '';
+            compareData.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>${item.price} تومان</td>
+                    <td>${item.cpu}</td>
+                    <td>${item.ram}</td>
+                    <td>${item.graphics}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+    };
+</script>
+
+</body>
+</html>
