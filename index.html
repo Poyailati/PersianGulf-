@@ -1,17 +1,42 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>پژو ELX</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>...</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #text {
+            font-size: 1.5rem;
+            border-left: 2px solid #fff;
+            padding-left: 10px;
+            white-space: pre-wrap;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1 id="title">پژو ELX، سلطان جاده‌ها</h1>
-    <img id="carImage" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Peugeot_Pars_ELX%2C_IKCO.jpg/800px-Peugeot_Pars_ELX%2C_IKCO.jpg" alt="Peugeot ELX">
-    <button onclick="changeColor()">تغییر رنگ پس‌زمینه</button>
-    <div id="infoBox" class="hidden"></div>
-  </div>
-  <script src="script.js"></script>
+
+    <div id="text"></div>
+
+    <script>
+        const message = "راستش رو بخوای... \nداشتم کد می‌زدم که یهو یادت افتادم. \nمی‌خواستم بگم بودنت خیلی قشنگ‌تر از کد زدنه. \nهمین. :)";
+        let i = 0;
+        function typing() {
+            if (i < message.length) {
+                document.getElementById("text").innerHTML += message.charAt(i);
+                i++;
+                setTimeout(typing, 80);
+            }
+        }
+        window.onload = typing;
+    </script>
 </body>
 </html>
